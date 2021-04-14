@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实名认证成功</title>
+    <link href="{{.ServerHost}}static/index.css" rel="stylesheet">
+    <script src="{{.ServerHost}}static/index.js"></script>
+    <script src="{{.ServerHost}}static/isMobile.js"></script>
+    <script>
+        if (isMobile.android.phone) {
+            window.identiy_callback.onSuccess()
+        }
+        if (isMobile.apple.phone) {
+            window.webkit.messageHandlers.identiy_callback.postMessage('onSuccess')
+        }
+    </script>
+</head>
+<body>
+<div class="top">
+    <img src="{{.ServerHost}}static/icon-success.png" alt="">
+    <span class="result">恭喜您完成身份验证</span>
+</div>
+<div class="bottom">
+    <span class="tip" id="tip"></span>
+    <button class="btn" onclick="to()">返回首页</button>
+</div>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+    time('tip', to);
+});
+
+function to() {
+    goTo({{.RedirectHost}});
+}
+
+</script>
+</body>
+</html>
