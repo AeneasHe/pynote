@@ -1,0 +1,20 @@
+{
+  "Host": "127.0.0.1",
+  "Port": "8099",
+  "Debug": false,
+  "Sync": true,
+  "RootPath": "/Users/aeneas/Github/Cofepy/youdao",
+  "TemplatePath": "/Users/aeneas/Github/Cofepy/pynote/pynote/template/*.html",
+  "StaticPath": "/Users/aeneas/Github/Cofepy/pynote/pynote/template/static",
+  "RedirectHost": "http://localhost",
+  "ServerHost": "http://127.0.0.1:8883/api/v1/",
+  "Secret": "8QOihWUl9uD5W4kI",
+  "Redis": {
+    "Name": "127.0.0.1",
+    "Port": 80,
+    "Password": ""
+  },
+  "WhiteListRobot": [
+    2
+  ]
+}
