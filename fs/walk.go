@@ -43,12 +43,12 @@ func ShowPath(path string, flag string) []string {
 
 	println("====>path", path)
 	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		if len(names) > 10 {
+		if len(names) > 50 {
 			return &StopError{}
 		}
+
 		if flag == "folder" {
 			if info.IsDir() {
-
 				path, err := filepath.Abs(path)
 				names = append(names, path)
 				if err != nil {
@@ -56,6 +56,7 @@ func ShowPath(path string, flag string) []string {
 				}
 			}
 		}
+
 		if flag == "file" {
 			if !info.IsDir() {
 				if strings.HasSuffix(path, ".md") {
@@ -67,6 +68,7 @@ func ShowPath(path string, flag string) []string {
 				}
 			}
 		}
+
 		if flag == "all" {
 			path, err := filepath.Abs(path)
 			names = append(names, path)

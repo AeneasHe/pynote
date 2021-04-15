@@ -31,6 +31,7 @@ const toDom = (str) => {
 };
 
 const appendToPathList = (str) => {
+    console.log("===>4", str)
     var name = str.replace(/^.*[\\\/]/, "");
     var filename = name.replace(".md", "");
     var pathType = "path-file";
@@ -136,7 +137,7 @@ $(document).on("click", ".path-name", async (event) => {
 
         console.log("===>3", folders);
 
-        //folders.map((f) => appendToPathList(f));
+        folders.map((f) => appendToPathList(f));
     }
 
 

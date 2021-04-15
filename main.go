@@ -41,9 +41,9 @@ func main() {
 	}
 
 	// 服务器初始化
-
-	go server.StartFromTemplate(configPath) // 从template中读取静态文件
-	//go server.StartFromAsset() // 从嵌入式asset读取静态文件
+	// go server.StartFromTemplate(configPath) // 从template中读取静态文件
+	go server.StartFromAsset() // 从嵌入式asset读取静态文件
+	// 开发阶段也可以用python独立脚本启动，有热加载，方便实时更新： python app.py
 
 	// webview窗口初始化
 	mainWindow := window.NewMainWindow(args)
