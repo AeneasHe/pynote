@@ -47,15 +47,17 @@ go run main.go
 
 开发时： 
 ``` golang
- //  main.go
-go server.StartFromTemplate(configPath) // 从template中读取静态文件
-//go server.StartFromAsset() // 从嵌入式asset读取静态文件
+//  main.go
+
+go server.StartFromTemplate(configPath) //从template中读取静态文件
+//go server.StartFromAsset() //从嵌入式asset读取静态文件
 ```
 部署时： 
 ``` golang
- //  main.go
-go server.StartFromTemplate(configPath) // 从template中读取静态文件
-//go server.StartFromAsset() // 从嵌入式asset读取静态文件
+//  main.go
+
+//go server.StartFromTemplate(configPath) //从template中读取静态文件
+go server.StartFromAsset() //从嵌入式asset读取静态文件
 ```
 
 打包脚本,目前只验证过mac
@@ -65,3 +67,6 @@ build-macos.sh      mac
 build-linux.sh      linux
 build-windows.bat   windows
 ```
+
+打包以后mac下的配置文件在,修改对应配置即可:  
+dist/mac/Pynote/app/Contents/MacOS/config.json  
