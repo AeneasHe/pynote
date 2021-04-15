@@ -6,7 +6,7 @@ import (
 
 func TestWalk(t *testing.T) {
 	path := "/Users/aeneas/Github/Cofepy/youdao"
-	names := ShowPath(path, "file")
+	names := ShowPath(path, "all")
 	for _, folder := range names {
 		t.Log(folder)
 	}

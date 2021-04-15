@@ -96,8 +96,8 @@ btnAll.addEventListener("click", async () => {
 //   await openWindow(""); 
 // });
 
-// 默认显示文件路径
-showPath(".", "file").then((files) => {
+// 初始加载默认路径，并显示所有文件夹和文件
+showPath(".", "all").then((files) => {
     pathList.innerText = "";
     files.map((f) => appendToPathList(f));
 });
