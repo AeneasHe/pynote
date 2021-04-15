@@ -22,19 +22,20 @@ func APP() {
 		cli.StringFlag{
 			Name:        "config",
 			Usage:       "set config path",
-			Value:       "",
+			Value:       "config.json",
 			Required:    false,
 			Destination: &config,
 		},
 	}
-	if config == "" {
-		config = "config.json"
-	}
+
+	log.Println("======>1", config)
+
 	app.Action = func(c *cli.Context) error {
 		s := NewServer(config)
 		s.Run()
 		return nil
 	}
+
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

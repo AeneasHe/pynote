@@ -1,37 +1,19 @@
 package window
 
 import (
-	"fmt"
 	"log"
 	"pynote/counter"
-	"sync"
+	"pynote/server"
 
 	"pynote/fs"
 
+	"github.com/jinzhu/configor"
 	"github.com/zserge/lorca"
 )
 
 type MainWindow struct {
 	UI lorca.UI
 }
-
-type CurrentFile struct {
-	sync.Mutex
-	Data string
-}
-
-func (f *CurrentFile) Update(data string) {
-	f.Lock()
-	defer f.Unlock()
-	f.Data = data
-}
-func (f *CurrentFile) Read() string {
-	f.Lock()
-	defer f.Unlock()
-	return f.Data
-}
-
-var cf = CurrentFile{}
 
 func NewMainWindow(args []string) MainWindow {
 
@@ -46,7 +28,6 @@ func NewMainWindow(args []string) MainWindow {
 	mainWindow.UI = ui
 
 	// 绑定方法
-	// A simple way to know when UI is ready (uses body.onload event in JS)
 	mainWindow.UI.Bind("start", func() {
 		log.Println("UI is ready")
 	})
@@ -55,41 +36,70 @@ func NewMainWindow(args []string) MainWindow {
 
 }
 
-func (mainWindow *MainWindow) Load(url string) {
+// 加载配置文件，然后加载目标路径
+func (mainWindow *MainWindow) Load(configPath string) {
+	config := new(server.EchoServerConfig)
+	err := configor.Load(config, configPath)
+	if err != nil {
+		println("配置文件读取错误")
+		panic(err)
+	}
+
+	fs.RootPath = config.RootPath
+
+	url := "http://" + config.Host + ":" + config.Port
+	log.Println("=======>window url:", url)
 	// 窗口加载页面
-	fmt.Println(url)
+	//url := "http://127.0.0.1:8099"
+
 	mainWindow.UI.Load(url)
 }
 
+// 执行js
 func (mainWindow *MainWindow) Dojs() {
 	// 窗口执行js程序
-	// You may use console.log to debug your JS code, it will be printed via
-	// log.Println(). Also exceptions are printed in a similar manner.
 	mainWindow.UI.Eval(`
 		console.log("Hello, world!");
 		console.log('Multiple values:', [1, false, {"x":5}]);
 	`)
 }
 
+// 开始计时器
 func (mainWindow *MainWindow) StartCounter() {
-	// Create and bind Go object to the UI
 	c := &counter.Counter{}
 	mainWindow.UI.Bind("counterAdd", c.Add)
 	mainWindow.UI.Bind("counterValue", c.Value)
 }
 
+// 绑定路径相关的方法
 func (mainWindow *MainWindow) AddPathWalk() {
-	mainWindow.UI.Bind("showPath", fs.Walk)
-	mainWindow.UI.Bind("showFile", fs.OpenFile)
-	mainWindow.UI.Bind("openWindow", mainWindow.openWindow)
+	// 显示路径
+	mainWindow.UI.Bind("showPath", fs.ShowPath)
+
+	// 打开
+	mainWindow.UI.Bind("openPath", mainWindow.openPath)
+
+	// 读取当前文件的内容
 	mainWindow.UI.Bind("currentFile", cf.Read)
+
 }
 
-func (mainWindow *MainWindow) openWindow(data interface{}) {
-	var filename = data.(string)
-	if filename != "" {
-		str := fs.OpenFile(filename)
-		cf.Update(str)
+func (mainWindow *MainWindow) openPath(data interface{}, pathType string) {
+	if pathType == "path-file" {
+		var filename = data.(string)
+		if filename != "" {
+			log.Println("=======>filename:", filename)
+			str := fs.ReadFile(filename)
+			cf.Update(str)
+		}
 	}
-	//mainWindow.Load("http://127.0.0.1/show")
+
+	if pathType == "path-folder" {
+		var foldername = data.(string)
+		if foldername != "" {
+			log.Println("=======>foldername:", foldername)
+			fs.ShowPath(foldername, "all")
+
+		}
+	}
 }

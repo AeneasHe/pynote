@@ -28,6 +28,7 @@ type EchoServerConfig struct {
 	Port           string `default:"80"`
 	Debug          bool
 	Sync           bool
+	RootPath       string `required:"true"`
 	TemplatePath   string `required:"true"`
 	StaticPath     string `required:"true"`
 	RedirectHost   string `required:"true"`
@@ -39,6 +40,7 @@ type EchoServerConfig struct {
 
 func NewServer(configPath string) *Server {
 	// 载入配置
+	log.Println("======>2", configPath)
 	server := new(Server)
 	server.config = new(EchoServerConfig)
 	err := configor.Load(server.config, configPath)
@@ -65,28 +67,28 @@ func NewServer(configPath string) *Server {
 }
 
 func (s *Server) Run() {
-	s.e.Logger.Fatal(s.e.Start(s.config.Host + ":" + s.config.Port))
+	// 启动服务器
+	addr := s.config.Host + ":" + s.config.Port
+	s.e.Logger.Fatal(s.e.Start(addr))
 }
 
 func (s *Server) Close() {
 	utils.RedisConnClose()
 }
 
-func Start() {
-	config := "./config.json"
-	s := NewServer(config)
+func StartFromTemplate(configPath string) {
+	s := NewServer(configPath)
 	s.Run()
 }
 
-func StartServer(addr string) string {
-	// Load HTML.
-	// You may also use `data:text/html,<base64>` approach to load initial HTML,
-	// e.g: ui.Load("data:text/html," + url.PathEscape(html))
+func StartFromAsset() string {
+	addr := "127.0.0.1:8099"
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	go http.Serve(ln, http.FileServer(asset.FS))
 	url := fmt.Sprintf("http://%s", ln.Addr())
+	log.Println("-------->", url)
 	return url
 }

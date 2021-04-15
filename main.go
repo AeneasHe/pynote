@@ -1,13 +1,15 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 	"runtime"
 
 	"pynote/server"
+	"pynote/utils"
 	"pynote/window"
+
+	"log"
 )
 
 func startEventLoop(mainWindow window.MainWindow) {
@@ -25,32 +27,34 @@ func startEventLoop(mainWindow window.MainWindow) {
 
 func main() {
 
+	// 日志初始化
+	utils.InitLog()
+
+	// 获取配置文件
+	configPath := utils.GetConfigPath()
+	log.Println("配置文件", configPath)
+
 	// 初始化
 	args := []string{}
 	if runtime.GOOS == "linux" {
 		args = append(args, "--class=Lorca")
 	}
 
-	// 窗口初始化
+	// 服务器初始化
+
+	go server.StartFromTemplate(configPath) // 从template中读取静态文件
+	//go server.StartFromAsset() // 从嵌入式asset读取静态文件
+
+	// webview窗口初始化
 	mainWindow := window.NewMainWindow(args)
 	defer mainWindow.UI.Close()
 
-	mainWindow.StartCounter()
+	// 绑定监听方法
+	//mainWindow.StartCounter()
 	mainWindow.AddPathWalk()
 
-	// 服务器初始化
-	//addr := "127.0.0.1:0"
-	//url := server.StartServer(addr)
-	//defer ln.Close()
-	go server.Start()
-	url := "http://127.0.0.1"
-
-	// window2 := window.NewMainWindow(args)
-	// defer window2.UI.Close()
-	// window2.Load("http://127.0.0.1/show")
-
 	// 窗口加载页面
-	mainWindow.Load(url)
+	mainWindow.Load(configPath)
 
 	// 执行js
 	mainWindow.Dojs()

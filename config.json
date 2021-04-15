@@ -1,8 +1,9 @@
 {
-  "Host": "",
-  "Port": "80",
+  "Host": "127.0.0.1",
+  "Port": "8099",
   "Debug": false,
   "Sync": true,
+  "RootPath": "/Users/aeneas/Github/Cofepy/youdao",
   "TemplatePath": "/Users/aeneas/Github/Cofepy/pynote/pynote/template/*.html",
   "StaticPath": "/Users/aeneas/Github/Cofepy/pynote/pynote/template/static",
   "RedirectHost": "http://localhost",
@@ -13,5 +14,7 @@
     "Port": 80,
     "Password": ""
   },
-  "WhiteListRobot": [2]
+  "WhiteListRobot": [
+    2
+  ]
 }

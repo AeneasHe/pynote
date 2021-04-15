@@ -7,13 +7,15 @@ import (
 	"strings"
 )
 
+var RootPath string = "~/"
+
 type StopError struct {
 }
 
 func (err *StopError) Error() string {
 	return "stop"
 }
-func OpenFile(filename string) string {
+func ReadFile(filename string) string {
 	//filename := "/Users/aeneas/Github/Cofepy/youdao/0新文档/ERP.md"
 	file, err := os.Open(filename)
 	if err != nil {
@@ -32,10 +34,15 @@ func OpenFile(filename string) string {
 	return data
 }
 
-func Walk(flag string) []string {
+func ShowPath(path string, flag string) []string {
 	var names []string
-	root := "/Users/aeneas/Github/Cofepy/youdao"
-	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+
+	if path == "." {
+		path = RootPath
+	}
+
+	println("====>path", path)
+	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if len(names) > 10 {
 			return &StopError{}
 		}

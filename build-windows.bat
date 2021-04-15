@@ -1,3 +1,3 @@
 @echo off
 go generate
-go build -ldflags "-H windowsgui" -o Pynote.exe
+go build -ldflags "-H windowsgui" -o dist/windows/Pynote.exe

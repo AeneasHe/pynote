@@ -1,7 +1,7 @@
 #!/bin/sh
 
 APP=Pynote
-APPDIR=${APP}_1.0.0
+APPDIR=dist/linux/${APP}_1.0.0
 
 mkdir -p $APPDIR/usr/bin
 mkdir -p $APPDIR/usr/share/applications
